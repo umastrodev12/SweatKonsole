@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SweatKonsole - Um terminal doce e fácil</title>
+    <style>
+        :root {
+            --bg-dark: #1b1e20;
+            --panel-dark: #232629;
+            --breeze-blue: #3daee9;
+            --terminal-green: #00ff80;
+            --text-light: #fcfcfc;
+            --text-muted: #a9b1b6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--panel-dark);
+            border-bottom: 2px solid #31363b;
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: bold;
+            font-size: 1.4rem;
+            color: var(--breeze-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo span {
+            color: var(--terminal-green);
+            font-family: 'Consolas', monospace;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-left: 1.5rem;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--breeze-blue);
+        }
+
+        .hero {
+            margin-top: 80px;
+            padding: 4rem 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(180deg, var(--panel-dark) 0%, var(--bg-dark) 100%);
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 span {
+            color: var(--breeze-blue);
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin-bottom: 2rem;
+        }
+
+        .window-mockup {
+            width: 100%;
+            max-width: 700px;
+            background-color: #232629;
+            border-radius: 6px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid #31363b;
+            overflow: hidden;
+            text-align: left;
+            font-family: 'Consolas', 'Courier New', monospace;
+            margin-bottom: 3rem;
+        }
+
+        .window-header {
+            background-color: #31363b;
+            padding: 0.6rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .window-tabs {
+            display: flex;
+            gap: 5px;
+        }
+
+        .tab {
+            background-color: #232629;
+            padding: 0.3rem 1rem;
+            border-radius: 4px 4px 0 0;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            border: 1px solid #232629;
+            border-bottom: none;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .control-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #555;
+        }
+        .control-dot.close { background-color: #da4453; }
+        .control-dot.minimize { background-color: #f6740e; }
+        .control-dot.maximize { background-color: #27ae60; }
+
+        .window-body {
+            padding: 1.5rem;
+            font-size: 1rem;
+            color: var(--terminal-green);
+            min-height: 250px;
+            background-color: #1b1e20;
+        }
+
+        .window-body p {
+            margin-bottom: 0.5rem;
+            color: var(--terminal-green);
+            font-family: inherit;
+            font-size: inherit;
+            text-align: left;
+            max-width: 100%;
+        }
+
+        .window-body .output {
+            color: var(--text-light);
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 18px;
+            background-color: var(--text-light);
+            animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+
+        .btn {
+            background-color: var(--breeze-blue);
+            color: #000;
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #2997d3;
+            transform: translateY(-2px);
+        }
+
+        .features {
+            padding: 4rem 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background-color: var(--panel-dark);
+            border: 1px solid #31363b;
+            padding: 2rem;
+            border-radius: 6px;
+            transition: border-color 0.3s;
+        }
+
+        .card:hover {
+            border-color: var(--breeze-blue);
+        }
+
+        .card h3 {
+            color: var(--breeze-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        footer {
+            background-color: var(--panel-dark);
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid #31363b;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--breeze-blue);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">🗔 <span>SweatKonsole</span></div>
+        <nav>
+            <a href="#features">Recursos</a>
+            <a href="https://github.com/umastrodev12/SweatKonsole" target="_blank">GitHub</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>O Emulador de Terminal feito em <span>C Puro</span></h1>
+        <p>Uma aplicação nativa Win32 inspirada no poder e visual do KDE Konsole, projetada para ser leve, modular e performática.</p>
+        
+        <div class="window-mockup">
+            <div class="window-header">
+                <div class="window-tabs">
+                    <div class="tab">bash : konsole</div>
+                </div>
+                <div class="window-controls">
+                    <div class="control-dot minimize"></div>
+                    <div class="control-dot maximize"></div>
+                    <div class="control-dot close"></div>
+                </div>
+            </div>
+            <div class="window-body">
+                <p class="output">=== Inicialização Concluída com Sucesso ===</p>
+                <p class="output">[ INFO ] Carregando perfis do KDE Breeze...</p>
+                <br>
+                <p>usuario@konsole:[~]> make</p>
+                <p class="output">Linkando arquivos e gerando konsole_gui.exe...</p>
+                <p class="output">Compilacao concluida com sucesso!</p>
+                <br>
+                <p>usuario@konsole:[~]> ./konsole_gui<span class="cursor"></span></p>
+            </div>
+        </div>
+
+        <a href="https://github.com/umastrodev12/SweatKonsole" target="_blank" class="btn">Ver Repositório</a>
+    </section>
+
+    <section class="features" id="features">
+        <div class="card">
+            <h3>Nativo & Veloz</h3>
+            <p>Construído diretamente sobre a Win32 API e GDI do Windows. Sem frameworks pesados por trás, rodando em C puro.</p>
+        </div>
+        <div class="card">
+            <h3>Gerenciamento Estilo KDE</h3>
+            <p>Prompt inteligente que identifica o diretório de trabalho atual dinamicamente e puxa o nome real do usuário do sistema.</p>
+        </div>
+        <div class="card">
+            <h3>Orquestrado por Init</h3>
+            <p>Acompanha um fluxo modularizado onde um processo de inicialização dedicado gerencia o ciclo de vida do shell principal.</p>
+        </div>
+    </section>
+
+    <footer>
+        <p>Desenvolvido com 💻 e ☕ por <a href="https://github.com/umastrodev12" target="_blank">umastrodev12</a>.</p>
+    </footer>
+
+</body>
+</html>
